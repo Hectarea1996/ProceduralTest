@@ -7,7 +7,7 @@
 #include "LevelInfo.h"
 #include <list>
 #include "LevelEntryComponent.h"
-//#include "LevelDynamicLoadSphere.h"
+#include "LevelDynamicLoadSphere.h"
 #include "LevelGenerator.generated.h"
 
 UCLASS()
@@ -85,7 +85,7 @@ public:
   /**
    * Get the possible transforms to spawn.
    */
-  TArray<FTransform> GetInitialTransforms();
+  // TArray<FTransform> GetInitialTransforms();
 
   /**
    * Hide the rooms that are far from player.

@@ -184,7 +184,7 @@ bool ALevelGenerator::GenerateLevel(){
 
   // Metemos MaxRooms salas o hasta no poder meter mas.
   bool unexpectedStop = false;
-  for (uint i = 0; (i < MaxRooms) && !unexpectedStop; i++) {
+  for (uint32 i = 0; (i < MaxRooms) && !unexpectedStop; i++) {
     
     // Reordenamos al azar las salas.
     TArray<std::pair<uint32,TSubclassOf<ALevelInfo>>> reorderedRooms = reorderRooms(Rooms,minSpawns,maxSpawns,MaxRooms,MaxRooms-i);
@@ -250,43 +250,43 @@ bool ALevelGenerator::GenerateLevel(){
   }
 
   // Creamos las esferas para la carga dinamica de niveles
-  // int sphereId = 1;
-  // for (ALevelInfo* levelRoom : FixedRooms){
-  //   bool inSomeSphere = false;
-  //   for (uint32 i=0; i < LevelInSpheres.Num(); i++){
-  //     ULevelDynamicLoadSphere* inSphere = LevelInSpheres[i];
-  //     ULevelDynamicLoadSphere* outSphere = LevelOutSpheres[i];
-  //     if (FVector::Dist(inSphere->GetComponentLocation(),levelRoom->GetActorLocation())<RoomsSphereRadius){
-  // 	UE_LOG(LogTemp,Warning,TEXT("Radius: %f"),inSphere->GetScaledSphereRadius());
-  // 	inSphere->AddLevelRoom(levelRoom);
-  // 	outSphere->AddLevelRoom(levelRoom);
-  // 	inSomeSphere = true;
-  //     }
-  //     if (inSomeSphere)
-  // 	break;
-  //   }
-  //   if (!inSomeSphere){
-  //     ULevelDynamicLoadSphere* newInSphere = NewObject<ULevelDynamicLoadSphere>(this,ULevelDynamicLoadSphere::StaticClass(),FName(FString::Printf(TEXT("NewInSphere%d"),sphereId)));
-  //     ULevelDynamicLoadSphere* newOutSphere = NewObject<ULevelDynamicLoadSphere>(this,ULevelDynamicLoadSphere::StaticClass(),FName(FString::Printf(TEXT("NewOutSphere%d"),sphereId)));
-  //     sphereId++;
-  //     newInSphere->RegisterComponent();
-  //     newOutSphere->RegisterComponent();
-  //     //newInSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-  //     newInSphere->SetWorldTransform(levelRoom->GetTransform());
-  //     newInSphere->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepWorldTransform);
-  //     newInSphere->AddLevelRoom(levelRoom);
-  //     newInSphere->SetSphereRadius(InSphereRadius);
-  //     UE_LOG(LogTemp,Warning,TEXT("Nombre: %f"),InSphereRadius);
-  //     newInSphere->OnComponentBeginOverlap.AddDynamic(this,&ALevelGenerationSeed::OnActivateSphereOverlapBegin);
-  //     newOutSphere->SetWorldTransform(levelRoom->GetTransform());
-  //     newOutSphere->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepWorldTransform);
-  //     newOutSphere->AddLevelRoom(levelRoom);
-  //     newOutSphere->SetSphereRadius(OutSphereRadius);
-  //     newOutSphere->OnComponentEndOverlap.AddDynamic(this,&ALevelGenerationSeed::OnDeactivateSphereOverlapEnd);
-  //     LevelInSpheres.Add(newInSphere);
-  //     LevelOutSpheres.Add(newOutSphere);
-  //   }
-  // }
+  int sphereId = 1;
+  for (ALevelInfo* levelRoom : FixedRooms){
+    bool inSomeSphere = false;
+    for (int i=0; i < LevelInSpheres.Num(); i++){
+      ULevelDynamicLoadSphere* inSphere = LevelInSpheres[i];
+      ULevelDynamicLoadSphere* outSphere = LevelOutSpheres[i];
+      if (FVector::Dist(inSphere->GetComponentLocation(),levelRoom->GetActorLocation())<RoomsSphereRadius){
+	UE_LOG(LogTemp,Warning,TEXT("Radius: %f"),inSphere->GetScaledSphereRadius());
+	inSphere->AddLevelRoom(levelRoom);
+	outSphere->AddLevelRoom(levelRoom);
+	inSomeSphere = true;
+      }
+      if (inSomeSphere)
+	break;
+    }
+    if (!inSomeSphere){
+      ULevelDynamicLoadSphere* newInSphere = NewObject<ULevelDynamicLoadSphere>(this,ULevelDynamicLoadSphere::StaticClass(),FName(FString::Printf(TEXT("NewInSphere%d"),sphereId)));
+      ULevelDynamicLoadSphere* newOutSphere = NewObject<ULevelDynamicLoadSphere>(this,ULevelDynamicLoadSphere::StaticClass(),FName(FString::Printf(TEXT("NewOutSphere%d"),sphereId)));
+      sphereId++;
+      newInSphere->RegisterComponent();
+      newOutSphere->RegisterComponent();
+      //newInSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+      newInSphere->SetWorldTransform(levelRoom->GetTransform());
+      newInSphere->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepWorldTransform);
+      newInSphere->AddLevelRoom(levelRoom);
+      newInSphere->SetSphereRadius(InSphereRadius);
+      UE_LOG(LogTemp,Warning,TEXT("Nombre: %f"),InSphereRadius);
+      newInSphere->OnComponentBeginOverlap.AddDynamic(this,&ALevelGenerator::OnActivateSphereOverlapBegin);
+      newOutSphere->SetWorldTransform(levelRoom->GetTransform());
+      newOutSphere->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepWorldTransform);
+      newOutSphere->AddLevelRoom(levelRoom);
+      newOutSphere->SetSphereRadius(OutSphereRadius);
+      newOutSphere->OnComponentEndOverlap.AddDynamic(this,&ALevelGenerator::OnDeactivateSphereOverlapEnd);
+      LevelInSpheres.Add(newInSphere);
+      LevelOutSpheres.Add(newOutSphere);
+    }
+  }
 
   // UE_LOG(LogTemp,Warning,TEXT("InSpheres: %d"),LevelInSpheres[0]->GetRooms().Num());
   // UE_LOG(LogTemp,Warning,TEXT("OutSpheres: %d"),LevelOutSpheres.Num());
@@ -310,7 +310,7 @@ bool ALevelGenerator::GenerateLevel(){
   this->SpawnRooms();
 
   // Ocultamos las salas que esten lejos del jugador.
-  //HideRoomsFarFromPlayer();
+  HideRoomsFarFromPlayer();
 
   return true;
   
@@ -348,24 +348,24 @@ bool ALevelGenerator::RestartLevel(){
 }
 
 
-TArray<FTransform> ALevelGenerator::GetInitialTransforms(){
-  TArray<FTransform> transforms;
-  for (ALevelInfo* levelInfo : FixedRooms){
-    TArray<FTransform> levelStarts = levelInfo->GetInitialTransforms();
-    transforms.Append(levelStarts);
-  }
-  return transforms;
-}
+// TArray<FTransform> ALevelGenerator::GetInitialTransforms(){
+//   TArray<FTransform> transforms;
+//   for (ALevelInfo* levelInfo : FixedRooms){
+//     TArray<FTransform> levelStarts = levelInfo->GetInitialTransforms();
+//     transforms.Append(levelStarts);
+//   }
+//   return transforms;
+// }
 
 
-void ALevelGenerationSeed::HideRoomsFarFromPlayer(){
+void ALevelGenerator::HideRoomsFarFromPlayer(){
   for (ULevelDynamicLoadSphere* inSphere : LevelInSpheres){
     inSphere->HideWhenFarFromPlayer();
   }
 }
 
 
-void ALevelGenerationSeed::OnActivateSphereOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
+void ALevelGenerator::OnActivateSphereOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 							int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult){
 
   ACharacter* player = Cast<ACharacter>(OtherActor);
@@ -374,12 +374,12 @@ void ALevelGenerationSeed::OnActivateSphereOverlapBegin(class UPrimitiveComponen
   // Si el actor es el jugador...
   if (player && dynamicSphere){
     UE_LOG(LogTemp,Warning,TEXT("Entra"));
-    for (ALevelGenerationInfo* room : dynamicSphere->GetLevelRooms()){
+    for (ALevelInfo* room : dynamicSphere->GetLevelRooms()){
       // Activamos la sala
-      if (room->LevelSpawned){
-	room->LevelSpawned->SetActorHiddenInGame(false);
-	room->LevelSpawned->SetActorEnableCollision(true);
-	//room->LevelSpawned->SetActorTickEnabled(true); (ver mejor esto)	
+      if (room->SpawnedLevel){
+	room->SpawnedLevel->SetActorHiddenInGame(false);
+	room->SpawnedLevel->SetActorEnableCollision(true);
+	room->SpawnedLevel->SetActorTickEnabled(true); //(ver mejor esto)	
       }
     }
   }
@@ -387,7 +387,7 @@ void ALevelGenerationSeed::OnActivateSphereOverlapBegin(class UPrimitiveComponen
 }
 
 
-void ALevelGenerationSeed::OnDeactivateSphereOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex){
+void ALevelGenerator::OnDeactivateSphereOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex){
 
   ACharacter* player = Cast<ACharacter>(OtherActor);
   ULevelDynamicLoadSphere* dynamicSphere = Cast<ULevelDynamicLoadSphere>(OverlappedComp);
@@ -396,12 +396,12 @@ void ALevelGenerationSeed::OnDeactivateSphereOverlapEnd(class UPrimitiveComponen
   if (player && dynamicSphere){
     UE_LOG(LogTemp,Warning,TEXT("Sale"));
     UE_LOG(LogTemp,Warning,TEXT("Salas que salen: %d"),dynamicSphere->GetLevelRooms().Num());
-    for (ALevelGenerationInfo* room : dynamicSphere->GetLevelRooms()){
+    for (ALevelInfo* room : dynamicSphere->GetLevelRooms()){
       // Activamos la sala
-      if (room->LevelSpawned){
-	room->LevelSpawned->SetActorHiddenInGame(true);
-	room->LevelSpawned->SetActorEnableCollision(false);
-	//room->LevelSpawned->SetActorTickEnabled(false); (ver mejor esto)
+      if (room->SpawnedLevel){
+	room->SpawnedLevel->SetActorHiddenInGame(true);
+	room->SpawnedLevel->SetActorEnableCollision(false);
+	room->SpawnedLevel->SetActorTickEnabled(false); //(ver mejor esto)
       }
     }
   }

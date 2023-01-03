@@ -28,12 +28,12 @@ void ALevelInfo::BeginPlay()
   Super::BeginPlay();
 
   // Asignamos el radio de accion de las esferas
-  ToActivateRoomSphere->SetSphereRadius(ActivateSphereRadius);
-  ToDeactivateRoomSphere->SetSphereRadius(DeactivateSphereRadius);
+  //ToActivateRoomSphere->SetSphereRadius(ActivateSphereRadius);
+  //ToDeactivateRoomSphere->SetSphereRadius(DeactivateSphereRadius);
 
   // Desactivamos la colision de las esferas para el generador.
-  ToActivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-  ToDeactivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+  //ToActivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+  //ToDeactivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   
   // Obtenemos los componentes que describen los puntos de union.
   GetComponents<ULevelEntryComponent>(this->Entries, false);
@@ -183,10 +183,10 @@ void ALevelInfo::SpawnLevel() {
     }
     
     // Activamos los overlaps de las esferas
-    ToActivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    ToDeactivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    ToActivateRoomSphere->OnComponentBeginOverlap.AddDynamic(this,&ALevelInfo::OnActivateSphereOverlapBegin);
-    ToDeactivateRoomSphere->OnComponentEndOverlap.AddDynamic(this,&ALevelInfo::OnDeactivateSphereOverlapEnd);
+    // ToActivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    // ToDeactivateRoomSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    // ToActivateRoomSphere->OnComponentBeginOverlap.AddDynamic(this,&ALevelInfo::OnActivateSphereOverlapBegin);
+    // ToDeactivateRoomSphere->OnComponentEndOverlap.AddDynamic(this,&ALevelInfo::OnDeactivateSphereOverlapEnd);
    
   }
 

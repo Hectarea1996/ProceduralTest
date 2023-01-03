@@ -95,7 +95,7 @@ public:
   /**
    * Devuelve los transforms donde el jugador puede aparecer.
    */
-  //TArray<FTransform> GetStartTransforms();
+  // TArray<FTransform> GetStartTransforms();
 
   /*
    *  Sets default values for this actor's properties
